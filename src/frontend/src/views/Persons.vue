@@ -18,11 +18,9 @@
 
 <script>
 import axios from "axios";
-
 const baseUrl = process.env.VUE_APP_API_BASE_URL;
-
 export default {
-  name: "about",
+  name: "persons",
   data() {
     return {
       persons: null
@@ -40,7 +38,6 @@ export default {
       if (this.$route.fullPath == "/persons") {
         try {
           const response = await axios.get(`${baseUrl}persons`);
-          console.log(response.data);
           this.persons = response.data;
         } catch (e) {
           console.log(e);
@@ -48,7 +45,6 @@ export default {
       }
     },
     async deleteUser(id) {
-      console.log(id);
       try {
         await axios.delete(`${baseUrl}persons/${id}`);
       } catch (e) {

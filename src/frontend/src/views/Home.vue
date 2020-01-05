@@ -29,9 +29,7 @@
 
 <script>
 import axios from "axios";
-
 const baseUrl = process.env.VUE_APP_API_BASE_URL;
-
 export default {
   name: "home",
   data: function() {
@@ -45,7 +43,6 @@ export default {
       console.log(baseUrl);
       console.log(this.firstName);
       console.log(this.lastName);
-
       try {
         const response = await axios.post(`${baseUrl}persons`, {
           firstName: this.firstName,
@@ -57,16 +54,6 @@ export default {
       } catch (e) {
         console.log(e);
       }
-      // axios.post("https://an85ia44y9.execute-api.ap-northeast-1.amazonaws.com/prod/persons",{
-      //   firstName: this.firstName,
-      //   lastName: this.lastName
-      // })
-      // .then(function(response) {
-      //   console.log(response.data)
-      //   this.firstName = ""
-      //   this.lastName = ""
-      // })
-      // .catch(error => (console.log(error)));
     }
   }
 };

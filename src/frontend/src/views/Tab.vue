@@ -24,11 +24,8 @@
 <script>
 const Home = () => import("@/views/Home.vue");
 const Persons = () => import("@/views/Persons.vue");
-
 export default {
-  name: "Tab",
+  name: "tab",
   components: { Home, Persons }
 };
 </script>
-
-<style scoped></style>

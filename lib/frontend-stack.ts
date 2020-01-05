@@ -1,7 +1,7 @@
 import {Bucket} from '@aws-cdk/aws-s3';
 import {CfnOutput, Construct, Duration, RemovalPolicy, Stack, StackProps} from "@aws-cdk/core";
 import {BucketDeployment, Source} from '@aws-cdk/aws-s3-deployment';
-import {CfnCloudFrontOriginAccessIdentity, CloudFrontWebDistribution, PriceClass} from '@aws-cdk/aws-cloudfront'
+import {CloudFrontWebDistribution, PriceClass, OriginAccessIdentity} from '@aws-cdk/aws-cloudfront'
 import {CanonicalUserPrincipal, Effect, PolicyStatement} from '@aws-cdk/aws-iam';
 
 export class FrontendStack extends Stack {
@@ -14,11 +14,7 @@ export class FrontendStack extends Stack {
         });
 
         // OAIの作成
-        const OAI = new CfnCloudFrontOriginAccessIdentity(this, 'OAI', {
-            cloudFrontOriginAccessIdentityConfig: {
-                comment: websiteBucket.bucketName
-            }
-        });
+        const OAI = new OriginAccessIdentity(this, 'OAI');
 
         // Bucket Policy(OAIに関して)を作成
         const webSiteBucketPolicyStatement = new PolicyStatement({
@@ -26,7 +22,7 @@ export class FrontendStack extends Stack {
             actions: ['s3:GetObject'],
             resources: [`${websiteBucket.bucketArn}/*`],
             principals: [
-                new CanonicalUserPrincipal(OAI.attrS3CanonicalUserId)
+                new CanonicalUserPrincipal(OAI.cloudFrontOriginAccessIdentityS3CanonicalUserId)
             ]
         });
         websiteBucket.addToResourcePolicy(webSiteBucketPolicyStatement);
@@ -36,7 +32,7 @@ export class FrontendStack extends Stack {
                 {
                     s3OriginSource: {
                         s3BucketSource: websiteBucket,
-                        originAccessIdentityId: OAI.ref
+                        originAccessIdentity: OAI
                     },
                     behaviors: [{
                         isDefaultBehavior: true,
